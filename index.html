@@ -34,12 +34,13 @@
             ];
 
             for (let i = 0; i < fileNames.length; i++) {
-                let imgPath = "images/" + fileNames[i]; // Aggiunto lo slash corretto
-                let img = loadImage(imgPath, 
-                    () => console.log("✔️ Caricata: " + imgPath), 
-                    () => console.error("❌ Errore nel caricamento: " + imgPath)
-                );
-                images.push(img);
+                let imgPath = "images/" + fileNames[i]; // Percorso corretto
+                loadImage(imgPath, (img) => {
+                    images.push(img);
+                    console.log("✔️ Caricata: " + imgPath); // Log di successo
+                }, (error) => {
+                    console.error("❌ Errore nel caricamento: " + imgPath); // Log di errore
+                });
             }
         }
 
@@ -47,8 +48,9 @@
             createCanvas(windowWidth, windowHeight, WEBGL);
             noStroke();
 
-            if (images.length === 0) {
-                console.error("Le immagini non sono state caricate correttamente!");
+            // Se non ci sono immagini, non proseguire
+            if (images.length < numPlanes) {
+                console.error("Non tutte le immagini sono caricate!");
                 return;
             }
 
