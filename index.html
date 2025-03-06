@@ -45,7 +45,7 @@
         }
 
         function setup() {
-            createCanvas(windowWidth, windowHeight, WEBGL); // Rende il canvas a schermo intero
+            createCanvas(710, 400, WEBGL);
             noStroke();
 
             if (images.length === 0) {
@@ -81,12 +81,10 @@
             cameraY += (targetCameraY - cameraY) * easing;
             zoom += (targetZoom - zoom) * easing;
 
-            // Aggiusta la posizione della telecamera
             translate(0, 0, -zoom);
             rotateX(cameraY);
             rotateY(cameraX);
 
-            // Visualizza le immagini sui piani
             for (let i = 0; i < numPlanes; i++) {
                 push();
                 translate(positions[i].x, positions[i].y, positions[i].z);
@@ -123,11 +121,6 @@
                 lastMouseX = mouseX;
                 lastMouseY = mouseY;
             }
-        }
-
-        // Aggiungi un evento per ridimensionare il canvas
-        function windowResized() {
-            resizeCanvas(windowWidth, windowHeight);
         }
     </script>
 </body>
