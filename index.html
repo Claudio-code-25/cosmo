@@ -8,7 +8,7 @@
 </head>
 <body>
     <script>
-        let numPlanes = 10; // Ridotto per performance
+        let numPlanes = 5; // Ridotto per performance
         let positions = [];
         let images = [];
         let planeImages = [];
@@ -25,18 +25,18 @@
 
         function preload() {
             let fileNames = [
-                "57426-15712409 1.png", "410041_2 1.png", "1626964087-grande-gatsby 1.png", 
-                "DS_Dire_Straits 1.png", "IMG_3723 1.png", "IMG_9559 1.png", "IMG_9561 1.png"
+                "57426-15712409-1.png", "410041_2-1.png", "1626964087-grande-gatsby-1.png"
             ];
 
             for (let i = 0; i < fileNames.length; i++) {
-                images.push(loadImage("images/" + fileNames[i])); // Aggiunto lo / corretto
+                let imgPath = "images/" + fileNames[i];
+                let img = loadImage(imgPath, img => console.log("Caricata:", imgPath), err => console.error("Errore nel caricamento:", imgPath));
+                images.push(img);
             }
-            console.log("Immagini caricate:", images); // Debug
         }
 
         function setup() {
-            createCanvas(windowWidth, windowHeight, WEBGL); // Canvas adattabile
+            createCanvas(windowWidth, windowHeight, WEBGL);
             noStroke();
 
             if (images.length === 0) {
@@ -61,12 +61,12 @@
                 } while (!validPosition);
 
                 positions.push(newPos);
-                planeImages.push(random(images));
+                planeImages.push(images[i % images.length]); // Assicura immagini cicliche
             }
         }
 
         function draw() {
-            background(255);
+            background(200);
 
             cameraX += (targetCameraX - cameraX) * easing;
             cameraY += (targetCameraY - cameraY) * easing;
