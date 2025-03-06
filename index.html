@@ -21,18 +21,33 @@ let fileNames = [
     "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9576%201.png",
     "https://github.com/claudio-code-25/cosmo/raw/main/images/Michael-Jordan-1988.jpg%201.png",
     "https://github.com/claudio-code-25/cosmo/raw/main/images/Schermata_2025-02-21_alle_18.25.52%201.png",
-    "https://github.com/claudio-code-25/cosmo/raw/main/images/Schermata_2025-02-21_alle_18.39.28%201.png"
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/Schermata_2025-02-21_alle_18.39.28%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/md_YDCJwbXZpA9iVfqgltVOLBumC4Rzjg9mT4GavlPwlbtRenveHS4Efy57XCOy%201.png"
 ];
 
 let images = [];
+let currentImageIndex = 0;
 
-for (let i = 0; i < fileNames.length; i++) {
-    fetch(fileNames[i], {mode: 'no-cors'})
-        .then(response => response.blob())
-        .then(imageBlob => {
-            let imageObjectURL = URL.createObjectURL(imageBlob);
-            images.push(imageObjectURL);
-            console.log("Immagine caricata:", imageObjectURL);  // Controllo per confermare
-        })
-        .catch(err => console.log("Errore nel caricamento dell'immagine:", err));
+function preload() {
+    // Preload all images
+    for (let i = 0; i < fileNames.length; i++) {
+        images[i] = loadImage(fileNames[i]);
+    }
+}
+
+function setup() {
+    createCanvas(windowWidth, windowHeight);
+    frameRate(1);  // Display one image per second
+}
+
+function draw() {
+    background(255);
+    
+    // Display the current image
+    image(images[currentImageIndex], 0, 0, width, height);
+}
+
+function mousePressed() {
+    // Move to the next image when mouse is pressed
+    currentImageIndex = (currentImageIndex + 1) % images.length;
 }
