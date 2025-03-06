@@ -8,7 +8,7 @@
 </head>
 <body>
     <script>
-        let numPlanes = 24; // Usa tutte le immagini disponibili
+        let numPlanes = 10; // Ridotto per performance
         let positions = [];
         let images = [];
         let planeImages = [];
@@ -25,32 +25,31 @@
 
         function preload() {
             let fileNames = [
-                "57426-15712409 1.png", "410041_2 1.png", "1626964087-grande-gatsby 1.png", "DS_Dire_Straits 1.png", "IMG_3723 1.png",
+                "1626964087-grande-gatsby 1.png", "410041_2 1.png", "57426-15712409 1.png", "DS_Dire_Straits 1.png", "IMG_3723 1.png",
                 "IMG_9559 1.png", "IMG_9561 1.png", "IMG_9562 1.png", "IMG_9563 1.png", "IMG_9564 1.png",
                 "IMG_9565 1.png", "IMG_9566 1.png", "IMG_9567 1.png", "IMG_9568 1.png", "IMG_9570 1.png",
                 "IMG_9571 1.png", "IMG_9573 1.png", "IMG_9574 1.png", "IMG_9575 1.png", "IMG_9576 1.png",
-                "md_YDCJwbXZpA9iVfqgltVOLBumC4Rzjg9mT4GavlPwlbtRenveHS4Efy57XCOy 1.png",
-                "Michael-Jordan-1988.jpg 1.png", "Schermata 2025-02-21 alle 18.25.52 1.png", "Schermata 2025-02-21 alle 18.39.28 1.png"
+                "Michael-Jordan-1988.jpg 1.png", "Schermata 2025-02-21 alle 18.25.52 1.png", "Schermata 2025-02-21 alle 18.39.28 1.png",
+                "md_YDCJwbXZpA9iVfqgltVOLBumC4Rzjg9mT4GavlPwlbtRenveHS4Efy57XCOy 1.png"
             ];
 
             for (let i = 0; i < fileNames.length; i++) {
-                let imgPath = "images/" + fileNames[i]; // Percorso corretto
+                let imgPath = "https://github.com/claudio-code-25/cosmo/raw/main/images/" + fileNames[i]; // Percorso assoluto
                 loadImage(imgPath, (img) => {
                     images.push(img);
-                    console.log("✔️ Caricata: " + imgPath); // Log di successo
+                    console.log("✔️ Caricata: " + imgPath);
                 }, (error) => {
-                    console.error("❌ Errore nel caricamento: " + imgPath); // Log di errore
+                    console.error("❌ Errore nel caricamento: " + imgPath);
                 });
             }
         }
 
         function setup() {
-            createCanvas(windowWidth, windowHeight, WEBGL);
+            createCanvas(710, 400, WEBGL);
             noStroke();
 
-            // Se non ci sono immagini, non proseguire
-            if (images.length < numPlanes) {
-                console.error("Non tutte le immagini sono caricate!");
+            if (images.length === 0) {
+                console.error("Le immagini non sono state caricate correttamente!");
                 return;
             }
 
@@ -71,12 +70,12 @@
                 } while (!validPosition);
 
                 positions.push(newPos);
-                planeImages.push(images[i % images.length]); // Assicura immagini cicliche
+                planeImages.push(random(images));
             }
         }
 
         function draw() {
-            background(200);
+            background(255);
 
             cameraX += (targetCameraX - cameraX) * easing;
             cameraY += (targetCameraY - cameraY) * easing;
@@ -92,7 +91,7 @@
                 if (planeImages[i]) {
                     texture(planeImages[i]);
                 }
-                plane(100, 100); // Dimensioni leggermente aumentate
+                plane(50, 50);
                 pop();
             }
         }
