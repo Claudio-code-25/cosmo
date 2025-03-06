@@ -1,60 +1,33 @@
 let fileNames = [
-    "57426-15712409%201.png", 
-    "410041_2%201.png",
-    "1626964087-grande-gatsby%201.png", 
-    "DS_Dire_Straits%201.png",
-    "IMG_3723%201.png",
-    "IMG_9559%201.png",
-    "IMG_9561%201.png",
-    "IMG_9562%201.png",
-    "IMG_9563%201.png",
-    "IMG_9564%201.png",
-    "IMG_9565%201.png",
-    "IMG_9566%201.png",
-    "IMG_9567%201.png",
-    "IMG_9568%201.png",
-    "IMG_9570%201.png",
-    "IMG_9571%201.png",
-    "IMG_9573%201.png",
-    "IMG_9574%201.png",
-    "IMG_9575%201.png",
-    "IMG_9576%201.png",
-    "Michael-Jordan-1988.jpg%201.png",
-    "Schermata%202025-02-21%20alle%2018.25.52%201.png",
-    "Schermata%202025-02-21%20alle%2018.39.28%201.png",
-    "md_YDCJwbXZpA9iVfqgltVOLBumC4Rzjg9mT4GavlPwlbtRenveHS4Efy57XCOy%201.png"
+    "57426-15712409 1.png",
+    "410041_2 1.png",
+    "1626964087-grande-gatsby 1.png",
+    "DS_Dire_Straits 1.png",
+    "IMG_3723 1.png",
+    "IMG_9559 1.png",
+    "IMG_9561 1.png",
+    "IMG_9562 1.png",
+    "IMG_9563 1.png",
+    "IMG_9564 1.png",
+    "IMG_9565 1.png",
+    "IMG_9566 1.png",
+    "IMG_9567 1.png",
+    "IMG_9568 1.png",
+    "IMG_9570 1.png",
+    "IMG_9571 1.png",
+    "IMG_9573 1.png",
+    "IMG_9574 1.png",
+    "IMG_9575 1.png",
+    "IMG_9576 1.png",
+    "Michael-Jordan-1988.jpg 1.png",
+    "Schermata 2025-02-21 alle 18.25.52 1.png",
+    "Schermata 2025-02-21 alle 18.39.28 1.png",
+    "md_YDCJwbXZpA9iVfqgltVOLBumC4Rzjg9mT4GavlPwlbtRenveHS4Efy57XCOy 1.png"
 ];
 
-let images = [];
-let currentImageIndex = 0;
-
 function preload() {
-    // Preload all images with a direct CORS-enabled URL
     for (let i = 0; i < fileNames.length; i++) {
-        let url = `https://raw.githubusercontent.com/claudio-code-25/cosmo/main/images/${fileNames[i]}`;
-        images[i] = loadImage(url, () => {
-            console.log(`Immagine ${i + 1} caricata con successo`);
-        }, (e) => {
-            console.error(`Errore nel caricamento dell'immagine ${i + 1}`, e);
-        });
+        images.push(loadImage('images/' + fileNames[i]));
     }
-}
-
-function setup() {
-    createCanvas(windowWidth, windowHeight);
-    frameRate(1);  // Una nuova immagine ogni secondo
-}
-
-function draw() {
-    background(255);
-    
-    // Se l'immagine è stata caricata, visualizzala
-    if (images[currentImageIndex]) {
-        image(images[currentImageIndex], 0, 0, width, height);
-    }
-}
-
-function mousePressed() {
-    // Vai all'immagine successiva al click del mouse
-    currentImageIndex = (currentImageIndex + 1) % images.length;
+    console.log("Immagini caricate:", images);
 }
