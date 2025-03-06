@@ -81,10 +81,12 @@
             cameraY += (targetCameraY - cameraY) * easing;
             zoom += (targetZoom - zoom) * easing;
 
+            // Aggiusta la posizione della telecamera
             translate(0, 0, -zoom);
             rotateX(cameraY);
             rotateY(cameraX);
 
+            // Visualizza le immagini sui piani
             for (let i = 0; i < numPlanes; i++) {
                 push();
                 translate(positions[i].x, positions[i].y, positions[i].z);
