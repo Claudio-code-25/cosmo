@@ -1,141 +1,38 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Image Planes</title>
-</head>
-<body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
-    <script>
-        let numPlanes = 10; // Ridotto per performance
-        let positions = [];
-        let images = [];
-        let planeImages = [];
+let fileNames = [
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/57426-15712409%201.png", 
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/410041_2%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/1626964087-grande-gatsby%201.png", 
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/DS_Dire_Straits%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_3723%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9559%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9561%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9562%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9563%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9564%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9565%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9566%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9567%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9568%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9570%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9571%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9573%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9574%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9575%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9576%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/Michael-Jordan-1988.jpg%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/Schermata_2025-02-21_alle_18.25.52%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/Schermata_2025-02-21_alle_18.39.28%201.png"
+];
 
-        let cameraX = 0, cameraY = 0, zoom = 500;
-        let targetCameraX = 0, targetCameraY = 0, targetZoom = 500;
-        let easing = 0.1;
-        let zoomSpeed = 50;
-        let moveSpeed = 0.01;
+let images = [];
 
-        let isDragging = false;
-        let lastMouseX, lastMouseY;
-        let minDistance = 50;
-
-        function preload() {
-            let fileNames = [
-                "1626964087-grande-gatsby 1.png",
-                "410041_2 1.png",
-                "57426-15712409 1.png",
-                "DS_Dire_Straits 1.png",
-                "IMG_3723 1.png",
-                "IMG_9559 1.png",
-                "IMG_9561 1.png",
-                "IMG_9562 1.png",
-                "IMG_9563 1.png",
-                "IMG_9564 1.png",
-                "IMG_9565 1.png",
-                "IMG_9566 1.png",
-                "IMG_9567 1.png",
-                "IMG_9568 1.png",
-                "IMG_9570 1.png",
-                "IMG_9571 1.png",
-                "IMG_9573 1.png",
-                "IMG_9574 1.png",
-                "IMG_9575 1.png",
-                "IMG_9576 1.png",
-                "Michael-Jordan-1988.jpg 1.png",
-                "Schermata 2025-02-21 alle 18.25.52 1.png",
-                "Schermata 2025-02-21 alle 18.39.28 1.png",
-                "md_YDCJwbXZpA9iVfqgltVOLBumC4Rzjg9mT4GavlPwlbtRenveHS4Efy57XCOy 1.png"
-            ];
-
-            for (let i = 0; i < fileNames.length; i++) {
-                // Corretto il percorso delle immagini
-                images.push(loadImage("images/" + fileNames[i]));
-            }
-            console.log("Immagini caricate:", images); // Debug
-        }
-
-        function setup() {
-            createCanvas(710, 400, WEBGL);
-            noStroke();
-
-            if (images.length === 0) {
-                console.error("Le immagini non sono state caricate correttamente!");
-                return;
-            }
-
-            for (let i = 0; i < numPlanes; i++) {
-                let newPos;
-                let validPosition;
-
-                do {
-                    newPos = createVector(random(-300, 300), random(-200, 200), random(-300, 300));
-                    validPosition = true;
-
-                    for (let j = 0; j < i; j++) {
-                        if (p5.Vector.dist(newPos, positions[j]) < minDistance) {
-                            validPosition = false;
-                            break;
-                        }
-                    }
-                } while (!validPosition);
-
-                positions.push(newPos);
-                planeImages.push(random(images));
-            }
-        }
-
-        function draw() {
-            background(255);
-
-            cameraX += (targetCameraX - cameraX) * easing;
-            cameraY += (targetCameraY - cameraY) * easing;
-            zoom += (targetZoom - zoom) * easing;
-
-            translate(0, 0, -zoom);
-            rotateX(cameraY);
-            rotateY(cameraX);
-
-            for (let i = 0; i < numPlanes; i++) {
-                push();
-                translate(positions[i].x, positions[i].y, positions[i].z);
-                if (planeImages[i]) {
-                    texture(planeImages[i]);
-                }
-                plane(50, 50);
-                pop();
-            }
-        }
-
-        function mouseWheel(event) {
-            targetZoom += event.delta * zoomSpeed * 0.1;
-        }
-
-        function mousePressed() {
-            isDragging = true;
-            lastMouseX = mouseX;
-            lastMouseY = mouseY;
-        }
-
-        function mouseReleased() {
-            isDragging = false;
-        }
-
-        function mouseDragged() {
-            if (isDragging) {
-                let deltaX = (mouseX - lastMouseX) * moveSpeed;
-                let deltaY = (mouseY - lastMouseY) * moveSpeed;
-
-                targetCameraX += deltaX;
-                targetCameraY += deltaY;
-
-                lastMouseX = mouseX;
-                lastMouseY = mouseY;
-            }
-        }
-    </script>
-</body>
-</html>
+for (let i = 0; i < fileNames.length; i++) {
+    fetch(fileNames[i], {mode: 'no-cors'})
+        .then(response => response.blob())
+        .then(imageBlob => {
+            let imageObjectURL = URL.createObjectURL(imageBlob);
+            images.push(imageObjectURL);
+            console.log("Immagine caricata:", imageObjectURL);  // Controllo per confermare
+        })
+        .catch(err => console.log("Errore nel caricamento dell'immagine:", err));
+}
