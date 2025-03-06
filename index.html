@@ -1,35 +1,37 @@
 let fileNames = [
-    "57426-15712409%201.png", 
-    "410041_2%201.png",
-    "1626964087-grande-gatsby%201.png", 
-    "DS_Dire_Straits%201.png",
-    "IMG_3723%201.png",
-    "IMG_9559%201.png",
-    "IMG_9561%201.png",
-    "IMG_9562%201.png",
-    "IMG_9563%201.png",
-    "IMG_9564%201.png",
-    "IMG_9565%201.png",
-    "IMG_9566%201.png",
-    "IMG_9567%201.png",
-    "IMG_9568%201.png",
-    "IMG_9570%201.png",
-    "IMG_9571%201.png",
-    "IMG_9573%201.png",
-    "IMG_9574%201.png",
-    "IMG_9575%201.png",
-    "IMG_9576%201.png",
-    "Michael-Jordan-1988.jpg%201.png"
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/57426-15712409%201.png", 
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/410041_2%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/1626964087-grande-gatsby%201.png", 
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/DS_Dire_Straits%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_3723%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9559%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9561%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9562%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9563%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9564%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9565%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9566%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9567%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9568%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9570%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9571%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9573%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9574%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9575%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/IMG_9576%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/Michael-Jordan-1988.jpg%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/Schermata_2025-02-21_alle_18.25.52%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/Schermata_2025-02-21_alle_18.39.28%201.png",
+    "https://github.com/claudio-code-25/cosmo/raw/main/images/md_YDCJwbXZpA9iVfqgltVOLBumC4Rzjg9mT4GavlPwlbtRenveHS4Efy57XCOy%201.png"
 ];
 
 let images = [];
 let currentImageIndex = 0;
 
 function preload() {
-    // Preload all images using the relative paths from the GitHub repository
+    // Preload all images
     for (let i = 0; i < fileNames.length; i++) {
-        let url = "https://github.com/claudio-code-25/cosmo/raw/main/images/" + fileNames[i];
-        images[i] = loadImage(url);
+        images[i] = loadImage(fileNames[i]);
     }
 }
 
