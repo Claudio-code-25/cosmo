@@ -29,26 +29,32 @@ let images = [];
 let currentImageIndex = 0;
 
 function preload() {
-    // Preload all images using the relative paths from the GitHub repository
+    // Preload all images with a direct CORS-enabled URL
     for (let i = 0; i < fileNames.length; i++) {
-        let url = "https://github.com/claudio-code-25/cosmo/raw/main/images/" + fileNames[i];
-        images[i] = loadImage(url);
+        let url = `https://raw.githubusercontent.com/claudio-code-25/cosmo/main/images/${fileNames[i]}`;
+        images[i] = loadImage(url, () => {
+            console.log(`Immagine ${i + 1} caricata con successo`);
+        }, (e) => {
+            console.error(`Errore nel caricamento dell'immagine ${i + 1}`, e);
+        });
     }
 }
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
-    frameRate(1);  // Display one image per second
+    frameRate(1);  // Una nuova immagine ogni secondo
 }
 
 function draw() {
     background(255);
     
-    // Display the current image
-    image(images[currentImageIndex], 0, 0, width, height);
+    // Se l'immagine è stata caricata, visualizzala
+    if (images[currentImageIndex]) {
+        image(images[currentImageIndex], 0, 0, width, height);
+    }
 }
 
 function mousePressed() {
-    // Move to the next image when mouse is pressed
+    // Vai all'immagine successiva al click del mouse
     currentImageIndex = (currentImageIndex + 1) % images.length;
 }
