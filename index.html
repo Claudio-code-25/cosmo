@@ -45,7 +45,7 @@
         }
 
         function setup() {
-            createCanvas(710, 400, WEBGL);
+            createCanvas(windowWidth, windowHeight, WEBGL); // Rende il canvas a schermo intero
             noStroke();
 
             if (images.length === 0) {
@@ -121,6 +121,11 @@
                 lastMouseX = mouseX;
                 lastMouseY = mouseY;
             }
+        }
+
+        // Aggiungi un evento per ridimensionare il canvas
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
         }
     </script>
 </body>
