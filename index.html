@@ -8,7 +8,7 @@
 </head>
 <body>
     <script>
-        let numPlanes = 10; // Ridotto per performance
+        let numPlanes = 10;
         let positions = [];
         let images = [];
         let planeImages = [];
@@ -34,7 +34,7 @@
             ];
 
             for (let i = 0; i < fileNames.length; i++) {
-                let imgPath = "https://github.com/claudio-code-25/cosmo/raw/main/images/" + fileNames[i]; // Percorso assoluto
+                let imgPath = "https://github.com/claudio-code-25/cosmo/raw/main/images/" + fileNames[i];
                 loadImage(imgPath, (img) => {
                     images.push(img);
                     console.log("✔️ Caricata: " + imgPath);
@@ -45,7 +45,7 @@
         }
 
         function setup() {
-            createCanvas(710, 400, WEBGL);
+            createCanvas(windowWidth, windowHeight, WEBGL); // Usa WEBGL per la grafica 3D
             noStroke();
 
             if (images.length === 0) {
@@ -53,6 +53,7 @@
                 return;
             }
 
+            // Crea le posizioni per i piani (immagini)
             for (let i = 0; i < numPlanes; i++) {
                 let newPos;
                 let validPosition;
@@ -77,21 +78,23 @@
         function draw() {
             background(255);
 
+            // Imposta la telecamera
             cameraX += (targetCameraX - cameraX) * easing;
             cameraY += (targetCameraY - cameraY) * easing;
             zoom += (targetZoom - zoom) * easing;
 
-            translate(0, 0, -zoom);
+            translate(0, 0, -zoom); // Sposta la scena indietro per adattarla allo zoom
             rotateX(cameraY);
             rotateY(cameraX);
 
+            // Mostra le immagini sui piani
             for (let i = 0; i < numPlanes; i++) {
                 push();
                 translate(positions[i].x, positions[i].y, positions[i].z);
                 if (planeImages[i]) {
                     texture(planeImages[i]);
                 }
-                plane(50, 50);
+                plane(100, 100); // Aumentato la dimensione dei piani per renderli più visibili
                 pop();
             }
         }
@@ -121,6 +124,10 @@
                 lastMouseX = mouseX;
                 lastMouseY = mouseY;
             }
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight); // Ridimensiona il canvas quando la finestra cambia
         }
     </script>
 </body>
