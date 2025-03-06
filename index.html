@@ -3,61 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Immagini 3D</title>
+    <title>3D Image Planes</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
 </head>
 <body>
     <script>
+        let numPlanes = 10; // Ridotto per performance
+        let positions = [];
         let images = [];
-        let imagePaths = [
-            "https://github.com/claudio-code-25/cosmo/raw/main/images/1626964087-grande-gatsby%201.png",
-            "https://github.com/claudio-code-25/cosmo/raw/main/images/410041_2%201.png",
-            "https://github.com/claudio-code-25/cosmo/raw/main/images/57426-15712409%201.png"
-            // Aggiungi qui tutti gli altri URL delle immagini
-        ];
+        let planeImages = [];
+
+        let cameraX = 0, cameraY = 0, zoom = 500;
+        let targetCameraX = 0, targetCameraY = 0, targetZoom = 500;
+        let easing = 0.1;
+        let zoomSpeed = 50;
+        let moveSpeed = 0.01;
+
+        let isDragging = false;
+        let lastMouseX, lastMouseY;
+        let minDistance = 50;
 
         function preload() {
-            // Carica le immagini
-            for (let i = 0; i < imagePaths.length; i++) {
-                loadImage(imagePaths[i], (img) => {
-                    images.push(img); // Salva l'immagine caricate
-                    console.log("✔️ Immagine caricata con successo: " + imagePaths[i]);
-                }, (err) => {
-                    console.log("❌ Errore nel caricamento: " + imagePaths[i]);
+            let fileNames = [
+                "1626964087-grande-gatsby 1.png", "410041_2 1.png", "57426-15712409 1.png", "DS_Dire_Straits 1.png", "IMG_3723 1.png",
+                "IMG_9559 1.png", "IMG_9561 1.png", "IMG_9562 1.png", "IMG_9563 1.png", "IMG_9564 1.png",
+                "IMG_9565 1.png", "IMG_9566 1.png", "IMG_9567 1.png", "IMG_9568 1.png", "IMG_9570 1.png",
+                "IMG_9571 1.png", "IMG_9573 1.png", "IMG_9574 1.png", "IMG_9575 1.png", "IMG_9576 1.png",
+                "Michael-Jordan-1988.jpg 1.png", "Schermata 2025-02-21 alle 18.25.52 1.png", "Schermata 2025-02-21 alle 18.39.28 1.png",
+                "md_YDCJwbXZpA9iVfqgltVOLBumC4Rzjg9mT4GavlPwlbtRenveHS4Efy57XCOy 1.png"
+            ];
+
+            for (let i = 0; i < fileNames.length; i++) {
+                let imgPath = "https://github.com/claudio-code-25/cosmo/raw/main/images/" + fileNames[i]; // Percorso assoluto
+                loadImage(imgPath, (img) => {
+                    images.push(img);
+                    console.log("✔️ Caricata: " + imgPath);
+                }, (error) => {
+                    console.error("❌ Errore nel caricamento: " + imgPath);
                 });
             }
         }
 
         function setup() {
-            createCanvas(windowWidth, windowHeight, WEBGL); // Usa WEBGL per grafica 3D
+            createCanvas(710, 400, WEBGL);
             noStroke();
+
+            if (images.length === 0) {
+                console.error("Le immagini non sono state caricate correttamente!");
+                return;
+            }
+
+            for (let i = 0; i < numPlanes; i++) {
+                let newPos;
+                let validPosition;
+
+                do {
+                    newPos = createVector(random(-300, 300), random(-200, 200), random(-300, 300));
+                    validPosition = true;
+
+                    for (let j = 0; j < i; j++) {
+                        if (p5.Vector.dist(newPos, positions[j]) < minDistance) {
+                            validPosition = false;
+                            break;
+                        }
+                    }
+                } while (!validPosition);
+
+                positions.push(newPos);
+                planeImages.push(random(images));
+            }
         }
 
         function draw() {
             background(255);
 
-            // Verifica se ci sono immagini caricate
-            if (images.length === 0) {
-                textSize(32);
-                fill(0);
-                textAlign(CENTER, CENTER);
-                text("Caricamento immagini in corso...", width / 2, height / 2);
-                return;
-            }
+            cameraX += (targetCameraX - cameraX) * easing;
+            cameraY += (targetCameraY - cameraY) * easing;
+            zoom += (targetZoom - zoom) * easing;
 
-            // Visualizza le immagini
-            let spacing = 150; // Distanza tra le immagini
-            for (let i = 0; i < images.length; i++) {
+            translate(0, 0, -zoom);
+            rotateX(cameraY);
+            rotateY(cameraX);
+
+            for (let i = 0; i < numPlanes; i++) {
                 push();
-                translate(i * spacing - (images.length * spacing) / 2, 0, 0);
-                texture(images[i]);
-                plane(100, 100); // Mostra ogni immagine su un piano
+                translate(positions[i].x, positions[i].y, positions[i].z);
+                if (planeImages[i]) {
+                    texture(planeImages[i]);
+                }
+                plane(50, 50);
                 pop();
             }
         }
 
-        function windowResized() {
-            resizeCanvas(windowWidth, windowHeight);
+        function mouseWheel(event) {
+            targetZoom += event.delta * zoomSpeed * 0.1;
+        }
+
+        function mousePressed() {
+            isDragging = true;
+            lastMouseX = mouseX;
+            lastMouseY = mouseY;
+        }
+
+        function mouseReleased() {
+            isDragging = false;
+        }
+
+        function mouseDragged() {
+            if (isDragging) {
+                let deltaX = (mouseX - lastMouseX) * moveSpeed;
+                let deltaY = (mouseY - lastMouseY) * moveSpeed;
+
+                targetCameraX += deltaX;
+                targetCameraY += deltaY;
+
+                lastMouseX = mouseX;
+                lastMouseY = mouseY;
+            }
         }
     </script>
 </body>
